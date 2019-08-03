@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Remote");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Hospitalizations");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Patients", new System.Windows.Forms.TreeNode[] {
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Remote");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Hospitalizations");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Patients", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode20});
             this.btnGenerate = new System.Windows.Forms.Button();
             this.sensorTimer = new System.Windows.Forms.Timer(this.components);
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -45,6 +45,15 @@
             this.lblInterval = new System.Windows.Forms.Label();
             this.lblCountPatients = new System.Windows.Forms.Label();
             this.gmap = new GMap.NET.WindowsForms.GMapControl();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblReplicas = new System.Windows.Forms.Label();
+            this.lblPartition = new System.Windows.Forms.Label();
+            this.lblTopic = new System.Windows.Forms.Label();
+            this.lblBrokerIdBrokerName = new System.Windows.Forms.Label();
+            this.lblProperties = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -54,7 +63,7 @@
             // 
             // btnGenerate
             // 
-            this.btnGenerate.Location = new System.Drawing.Point(26, 75);
+            this.btnGenerate.Location = new System.Drawing.Point(25, 98);
             this.btnGenerate.Name = "btnGenerate";
             this.btnGenerate.Size = new System.Drawing.Size(192, 40);
             this.btnGenerate.TabIndex = 1;
@@ -64,24 +73,23 @@
             // 
             // sensorTimer
             // 
-            this.sensorTimer.Enabled = true;
             this.sensorTimer.Interval = 1;
             this.sensorTimer.Tick += new System.EventHandler(this.sensorTimer_Tick);
             // 
             // treeView1
             // 
             this.treeView1.CheckBoxes = true;
-            this.treeView1.Location = new System.Drawing.Point(26, 175);
+            this.treeView1.Location = new System.Drawing.Point(15, 237);
             this.treeView1.Name = "treeView1";
-            treeNode7.Name = "remote";
-            treeNode7.Text = "Remote";
-            treeNode8.Name = "hospitalizations";
-            treeNode8.Text = "Hospitalizations";
-            treeNode9.Name = "patients";
-            treeNode9.Text = "Patients";
+            treeNode19.Name = "remote";
+            treeNode19.Text = "Remote";
+            treeNode20.Name = "hospitalizations";
+            treeNode20.Text = "Hospitalizations";
+            treeNode21.Name = "patients";
+            treeNode21.Text = "Patients";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
-            this.treeView1.Size = new System.Drawing.Size(354, 800);
+            treeNode21});
+            this.treeView1.Size = new System.Drawing.Size(286, 800);
             this.treeView1.TabIndex = 11;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             // 
@@ -102,16 +110,26 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblProperties);
+            this.splitContainer1.Panel2.Controls.Add(this.lblReplicas);
+            this.splitContainer1.Panel2.Controls.Add(this.lblPartition);
+            this.splitContainer1.Panel2.Controls.Add(this.lblTopic);
+            this.splitContainer1.Panel2.Controls.Add(this.lblBrokerIdBrokerName);
+            this.splitContainer1.Panel2.Controls.Add(this.label4);
+            this.splitContainer1.Panel2.Controls.Add(this.label3);
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
+            this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(this.lblCountPatients);
             this.splitContainer1.Panel2.Controls.Add(this.gmap);
-            this.splitContainer1.Size = new System.Drawing.Size(1646, 994);
+            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
+            this.splitContainer1.Size = new System.Drawing.Size(1646, 1057);
             this.splitContainer1.SplitterDistance = 335;
             this.splitContainer1.TabIndex = 12;
             // 
             // chkSelectUnselect
             // 
             this.chkSelectUnselect.AutoSize = true;
-            this.chkSelectUnselect.Location = new System.Drawing.Point(26, 136);
+            this.chkSelectUnselect.Location = new System.Drawing.Point(25, 175);
             this.chkSelectUnselect.Name = "chkSelectUnselect";
             this.chkSelectUnselect.Size = new System.Drawing.Size(193, 24);
             this.chkSelectUnselect.TabIndex = 1;
@@ -167,7 +185,7 @@
             this.lblCountPatients.AutoSize = true;
             this.lblCountPatients.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCountPatients.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lblCountPatients.Location = new System.Drawing.Point(3, 86);
+            this.lblCountPatients.Location = new System.Drawing.Point(3, 109);
             this.lblCountPatients.Name = "lblCountPatients";
             this.lblCountPatients.Size = new System.Drawing.Size(406, 29);
             this.lblCountPatients.TabIndex = 13;
@@ -182,7 +200,7 @@
             this.gmap.GrayScaleMode = false;
             this.gmap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.gmap.LevelsKeepInMemmory = 5;
-            this.gmap.Location = new System.Drawing.Point(8, 175);
+            this.gmap.Location = new System.Drawing.Point(8, 237);
             this.gmap.MarkersEnabled = true;
             this.gmap.MaxZoom = 20;
             this.gmap.MinZoom = 2;
@@ -199,6 +217,84 @@
             this.gmap.Size = new System.Drawing.Size(1296, 800);
             this.gmap.TabIndex = 0;
             this.gmap.Zoom = 0D;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(772, 69);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(179, 20);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Broker Id, Broker Name:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(856, 108);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(95, 20);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Topic name:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(880, 144);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 20);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Partition:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(877, 179);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(74, 20);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Replicas:";
+            // 
+            // lblReplicas
+            // 
+            this.lblReplicas.AutoSize = true;
+            this.lblReplicas.Location = new System.Drawing.Point(973, 179);
+            this.lblReplicas.Name = "lblReplicas";
+            this.lblReplicas.Size = new System.Drawing.Size(0, 20);
+            this.lblReplicas.TabIndex = 21;
+            // 
+            // lblPartition
+            // 
+            this.lblPartition.AutoSize = true;
+            this.lblPartition.Location = new System.Drawing.Point(973, 144);
+            this.lblPartition.Name = "lblPartition";
+            this.lblPartition.Size = new System.Drawing.Size(0, 20);
+            this.lblPartition.TabIndex = 20;
+            // 
+            // lblTopic
+            // 
+            this.lblTopic.AutoSize = true;
+            this.lblTopic.Location = new System.Drawing.Point(973, 108);
+            this.lblTopic.Name = "lblTopic";
+            this.lblTopic.Size = new System.Drawing.Size(0, 20);
+            this.lblTopic.TabIndex = 19;
+            // 
+            // lblBrokerIdBrokerName
+            // 
+            this.lblBrokerIdBrokerName.AutoSize = true;
+            this.lblBrokerIdBrokerName.Location = new System.Drawing.Point(973, 69);
+            this.lblBrokerIdBrokerName.Name = "lblBrokerIdBrokerName";
+            this.lblBrokerIdBrokerName.Size = new System.Drawing.Size(0, 20);
+            this.lblBrokerIdBrokerName.TabIndex = 18;
+            // 
+            // lblProperties
+            // 
+            this.lblProperties.AutoSize = true;
+            this.lblProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProperties.Location = new System.Drawing.Point(762, 11);
+            this.lblProperties.Name = "lblProperties";
+            this.lblProperties.Size = new System.Drawing.Size(58, 25);
+            this.lblProperties.TabIndex = 22;
+            this.lblProperties.Text = "label";
             // 
             // Form1
             // 
@@ -232,6 +328,15 @@
         private System.Windows.Forms.NumericUpDown numericInterval;
         private System.Windows.Forms.Label lblInterval;
         private System.Windows.Forms.Label lblCountPatients;
+        private System.Windows.Forms.Label lblReplicas;
+        private System.Windows.Forms.Label lblPartition;
+        private System.Windows.Forms.Label lblTopic;
+        private System.Windows.Forms.Label lblBrokerIdBrokerName;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblProperties;
     }
 }
 

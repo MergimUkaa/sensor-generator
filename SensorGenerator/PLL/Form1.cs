@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SensorGenerator.DAL;
 using SensorGenerator.BLL;
 using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 using Newtonsoft.Json;
 using System.Dynamic;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,7 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+
 namespace SensorGenerator
 {
     public partial class Form1 : Form
@@ -35,13 +37,14 @@ namespace SensorGenerator
 
         private void button1_Click(object sender, EventArgs e)
         {
-          
-           if(!radioMinute.Checked && !radioSecond.Checked)
+            
+           if (!radioMinute.Checked && !radioSecond.Checked)
             {
                 MessageBox.Show("You must select the unit of time to generate data", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-           if(sensorTimer.Enabled)
+            sensorTimer.Enabled = true;
+            if (sensorTimer.Enabled)
             {
                 if(radioSecond.Checked)
                 {
@@ -75,86 +78,117 @@ namespace SensorGenerator
 
         private void sensorTimer_Tick(object sender, EventArgs e)
         {
-            //try {
-            //    Random number = new Random();
-            //    int guessing = number.Next(0, 1000);
-            //    RandomDoubleGenerator random = new RandomDoubleGenerator();
-            //    double sensorValues, sensorValues1;
-            //    if (guessing == 274 || guessing == 554 || guessing == 799)
-            //    {
-            //        if (parameterName == "blood pressure")
-            //        {
-            //            sensorValues = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
-            //            sensorValues1 = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
-            //        }
-            //        else
-            //        {
-            //            sensorValues = Math.Round(random.GenerateValue(minValue, maxValue), 4);
-            //            sensorValues1 = 0;
-            //        }
 
+            //Random number = new Random();
+            //int guessing = number.Next(0, 1000);
+            //RandomDoubleGenerator random = new RandomDoubleGenerator();
+            //double sensorValues, sensorValues1;
+            //if (guessing == 274 || guessing == 554 || guessing == 799)
+            //{
+            //    if (parameterName == "blood pressure")
+            //    {
+            //        sensorValues = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
+            //        sensorValues1 = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
             //    }
             //    else
             //    {
-            //        if (parameterName == "blood pressure")
-            //        {
-            //            sensorValues = Math.Round(random.GenerateValue(normalMin, normalMin + 10.00), 4);
-            //            sensorValues1 = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
-            //        }
-            //        else
-            //        {
-            //            sensorValues = Math.Round(random.GenerateValue(normalMin, normalMax), 4);
-            //            sensorValues1 = 0;
-            //        }
-
+            //        sensorValues = Math.Round(random.GenerateValue(minValue, maxValue), 4);
+            //        sensorValues1 = 0;
             //    }
 
-            //    string jsonData = String.Empty;
-            //    if (true) // hospitalizations
-            //    {
-            //        JObject jo = JObject.FromObject(dataSendToKafkaHospitalization);
-            //        if (parameterName == "blood pressure")
-            //        {
-            //            jo.Add("sensorValue", sensorValues);
-            //            jo.Add("sensorValue1", sensorValues1);
-            //        }
-            //        else
-            //        {
-            //            jo.Add("sensorValue", sensorValues);
-            //        }
-            //        jsonData = jo.ToString();
-            //    }
-            //    else if (true)
-            //    {
-            //        JObject jo = JObject.FromObject(dataSendToKafkaRemoteControl);
-            //        if (parameterName == "blood pressure")
-            //        {
-            //            jo.Add("sensorValue", sensorValues);
-            //            jo.Add("sensorValue1", sensorValues1);
-            //        }
-            //        else
-            //        {
-            //            jo.Add("sensorValue", sensorValues);
-            //        }
-            //        jsonData = jo.ToString();
-            //    }
-
-            //    var conf = new ProducerConfig { BootstrapServers = "localhost:9092" };
-
-
-            //    using (var p = new ProducerBuilder<Null, string>(conf).Build())
-            //    {
-
-            //        p.Produce("sensor-generator", new Message<Null, string> { Value = jsonData });
-
-            //        // wait for up to 10 seconds for any inflight messages to be delivered.
-            //        p.Flush(TimeSpan.FromSeconds(10));
-            //    }
             //}
-            //catch (Exception ex)
+            //else
             //{
-            //    MessageBox.Show("Te dhenat nuk mund te dergohen ne kafka", "Gjeneratori nuk mund te lidhet me Apache Kafka", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    if (parameterName == "blood pressure")
+            //    {
+            //        sensorValues = Math.Round(random.GenerateValue(normalMin, normalMin + 10.00), 4);
+            //        sensorValues1 = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
+            //    }
+            //    else
+            //    {
+            //        sensorValues = Math.Round(random.GenerateValue(normalMin, normalMax), 4);
+            //        sensorValues1 = 0;
+            //    }
+
             //}
+
+            //string jsonData = String.Empty;
+            //if (true) // hospitalizations
+            //{
+            //    JObject jo = JObject.FromObject(dataSendToKafkaHospitalization);
+            //    if (parameterName == "blood pressure")
+            //    {
+            //        jo.Add("sensorValue", sensorValues);
+            //        jo.Add("sensorValue1", sensorValues1);
+            //    }
+            //    else
+            //    {
+            //        jo.Add("sensorValue", sensorValues);
+            //    }
+            //    jsonData = jo.ToString();
+            //}
+            //else if (true)
+            //{
+            //    JObject jo = JObject.FromObject(dataSendToKafkaRemoteControl);
+            //    if (parameterName == "blood pressure")
+            //    {
+            //        jo.Add("sensorValue", sensorValues);
+            //        jo.Add("sensorValue1", sensorValues1);
+            //    }
+            //    else
+            //    {
+            //        jo.Add("sensorValue", sensorValues);
+            //    }
+            //    jsonData = jo.ToString();
+            //}
+
+            using (var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = "localhost:9092" }).Build())
+            {
+                try
+                {
+                    // Warning: The API for this functionality is subject to change.
+                    var meta = adminClient.GetMetadata(TimeSpan.FromSeconds(1));
+                    lblProperties.Text = "Kafka Broker and Topic properties:";
+                    label1.Text = "Broker Id, Broker Name: ";
+                    label2.Text = "Topic name: ";
+                    label3.Text = "Partition: ";
+                    label4.Text = "Replicas: ";
+                    
+                    
+                    meta.Brokers.ForEach(broker =>
+                    lblBrokerIdBrokerName.Text = (broker.BrokerId + ", " + broker.Host +":"+broker.Port).ToString());
+                    lblTopic.Text = meta.Topics[2].Topic;
+                    meta.Topics[2].Partitions.ForEach(partition =>
+                    {
+                        lblPartition.Text = partition.PartitionId.ToString();
+                        lblReplicas.Text = partition.Replicas[0].ToString();
+                    });
+                    lblCountPatients.Text = "Data are sending to Kafka...";
+                }
+                catch (KafkaException ex)
+                {
+                    sensorTimer.Enabled = false;
+                    sensorTimer.Stop();
+                    MessageBox.Show(ex.Message + ": Could not connect to Kafka Server!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                }
+            }
+
+            // var conf = new ProducerConfig { BootstrapServers = "localhost:9092" };
+            // Action<DeliveryReport<Null, string>> handler = r =>
+            //Console.WriteLine(!r.Error.IsError
+            // ? "Delivered message to" + r.TopicPartitionOffset
+            // : "Delivery Error: " + r.Error.Reason);
+            // using (var p = new ProducerBuilder<Null, string>(conf).Build())
+            // {
+
+            //     p.Produce("sensor-generator", new Message<Null, string> { Value = "hello" }, handler);
+
+            //     // wait for up to 10 seconds for any inflight messages to be delivered.
+            //     p.Flush(TimeSpan.FromSeconds(10));
+            // }
+
+
 
         }
 
@@ -220,7 +254,10 @@ namespace SensorGenerator
                 countSelectedNodes.ToString() + " patient ready for sending to Kafka...";
         }
 
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
 
         public void CheckAllNodes(TreeNodeCollection nodes)
         {
