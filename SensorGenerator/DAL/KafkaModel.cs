@@ -14,5 +14,6 @@ namespace SensorGenerator.DAL
         public string ParameterUnitMeasured { get; set; }
         public string SensorType { get; set; }
         public string PatientDiagnosis { get; set; }
+        public double[] SensorValues = new double[2]; 
     }
 }

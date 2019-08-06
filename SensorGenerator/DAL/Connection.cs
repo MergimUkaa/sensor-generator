@@ -10,6 +10,6 @@ namespace SensorGenerator.DAL
 {
     public class Connection
     {
-       public MySqlConnection conn = new MySqlConnection("server=127.0.0.1;user id=mergim;password=mergim;persistsecurityinfo=True;database=ehealth");
+       public MySqlConnection conn = new MySqlConnection("server=127.0.0.1;user id=mergim;password=mergim;persistsecurityinfo=True;database=ehealth;Max Pool Size=1000;");
     }
 }

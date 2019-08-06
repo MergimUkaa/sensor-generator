@@ -26,10 +26,10 @@ namespace SensorGenerator
     public partial class Form1 : Form
     {
         SensorDataBLL sensorData = new SensorDataBLL();
-        SensorModelRemoteControl dataSendToKafkaRemoteControl;
-        SensorModelHospitalization dataSendToKafkaHospitalization;
-        private double maxValue, minValue, normalMax, normalMin;
-        private string parameterName;
+        List<KafkaModel> patientList = new List<KafkaModel>();
+        List<int> patientIndexSelectedRemote = new List<int>();
+        List<int> patientIndexSelectedHospitalization = new List<int>();
+        private int countedPatients = 0;
         public Form1()
         {
             InitializeComponent();
@@ -37,10 +37,15 @@ namespace SensorGenerator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+           
            if (!radioMinute.Checked && !radioSecond.Checked)
             {
                 MessageBox.Show("You must select the unit of time to generate data", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (countedPatients  < 1)
+            {
+                MessageBox.Show("You must select at least one patient to generate data", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             sensorTimer.Enabled = true;
@@ -60,6 +65,7 @@ namespace SensorGenerator
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            treeView1.Nodes[0].Expand();
             foreach (SensorModelRemoteControl  sensor in sensorData.remoteControlData())
             {
                 treeView1.Nodes[0].Nodes[0].Nodes.Add(sensor.PatientName + " " + sensor.PatientSurname);
@@ -68,6 +74,7 @@ namespace SensorGenerator
 
             foreach (SensorModelHospitalization sensor in sensorData.hospitalizationData())
             {
+           
                 treeView1.Nodes[0].Nodes[1].Nodes.Add(sensor.PatientName + " " + sensor.PatientSurname);
                 mapMarker(Convert.ToDouble(sensor.PatientLat), Convert.ToDouble(sensor.PatientLng), sensor.PatientName + " " + sensor.PatientSurname);
             }
@@ -79,68 +86,98 @@ namespace SensorGenerator
         private void sensorTimer_Tick(object sender, EventArgs e)
         {
 
-            //Random number = new Random();
-            //int guessing = number.Next(0, 1000);
-            //RandomDoubleGenerator random = new RandomDoubleGenerator();
-            //double sensorValues, sensorValues1;
-            //if (guessing == 274 || guessing == 554 || guessing == 799)
-            //{
-            //    if (parameterName == "blood pressure")
-            //    {
-            //        sensorValues = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
-            //        sensorValues1 = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
-            //    }
-            //    else
-            //    {
-            //        sensorValues = Math.Round(random.GenerateValue(minValue, maxValue), 4);
-            //        sensorValues1 = 0;
-            //    }
+            Random number = new Random();
+            int guessing = number.Next(0, 1000);
+            RandomDoubleGenerator random = new RandomDoubleGenerator();           
+            foreach (var patientIndex in patientIndexSelectedRemote)
+            {
+                KafkaModel kafkaModel = new KafkaModel();
+                kafkaModel.SensorId = sensorData.remoteControlData()[patientIndex].SensorId;
+                kafkaModel.PatientId = sensorData.remoteControlData()[patientIndex].PatientId;
+                kafkaModel.DoctorId = sensorData.remoteControlData()[patientIndex].DoctorId;
+                kafkaModel.SensorType = sensorData.remoteControlData()[patientIndex].SensorType;
+                kafkaModel.ParameterUnitMeasured = sensorData.remoteControlData()[patientIndex].ParameterUnitMeasured;
+                kafkaModel.PatientDiagnosis = sensorData.remoteControlData()[patientIndex].PatientDiagnosis;
+                var minValue = sensorData.remoteControlData()[patientIndex].ParameterMinValue;
+                var maxValue = sensorData.remoteControlData()[patientIndex].ParameterMaxValue;
+                var normalMax = sensorData.remoteControlData()[patientIndex].ParameterNormalMaxValue;
+                var normalMin = sensorData.remoteControlData()[patientIndex].ParameterNormalMinValue;
+                if (guessing == 274 || guessing == 554 || guessing == 799)
+                {
+                    if (sensorData.remoteControlData()[patientIndex].ParameterName == "blood pressure")
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
+                        kafkaModel.SensorValues[1] = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
+                    }
+                    else
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(minValue, maxValue), 4);
+                        kafkaModel.SensorValues[1] = 0;
+                    }
 
-            //}
-            //else
-            //{
-            //    if (parameterName == "blood pressure")
-            //    {
-            //        sensorValues = Math.Round(random.GenerateValue(normalMin, normalMin + 10.00), 4);
-            //        sensorValues1 = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
-            //    }
-            //    else
-            //    {
-            //        sensorValues = Math.Round(random.GenerateValue(normalMin, normalMax), 4);
-            //        sensorValues1 = 0;
-            //    }
+                }
+                else
+                {
+                    if (sensorData.remoteControlData()[patientIndex].ParameterName == "blood pressure")
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(normalMin, normalMin + 10.00), 4);
+                        kafkaModel.SensorValues[1] = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
+                    }
+                    else
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(normalMin, normalMax), 4);
+                        kafkaModel.SensorValues[1] = 0;
+                    }
 
-            //}
+                }
+                patientList.Add(kafkaModel);
+            }
 
-            //string jsonData = String.Empty;
-            //if (true) // hospitalizations
-            //{
-            //    JObject jo = JObject.FromObject(dataSendToKafkaHospitalization);
-            //    if (parameterName == "blood pressure")
-            //    {
-            //        jo.Add("sensorValue", sensorValues);
-            //        jo.Add("sensorValue1", sensorValues1);
-            //    }
-            //    else
-            //    {
-            //        jo.Add("sensorValue", sensorValues);
-            //    }
-            //    jsonData = jo.ToString();
-            //}
-            //else if (true)
-            //{
-            //    JObject jo = JObject.FromObject(dataSendToKafkaRemoteControl);
-            //    if (parameterName == "blood pressure")
-            //    {
-            //        jo.Add("sensorValue", sensorValues);
-            //        jo.Add("sensorValue1", sensorValues1);
-            //    }
-            //    else
-            //    {
-            //        jo.Add("sensorValue", sensorValues);
-            //    }
-            //    jsonData = jo.ToString();
-            //}
+            foreach (var patientIndex in patientIndexSelectedHospitalization)
+            {
+                KafkaModel kafkaModel = new KafkaModel();
+                kafkaModel.SensorId = sensorData.hospitalizationData()[patientIndex].SensorId;
+                kafkaModel.PatientId = sensorData.hospitalizationData()[patientIndex].PatientId;
+                kafkaModel.DoctorId = sensorData.hospitalizationData()[patientIndex].DoctorId;
+                kafkaModel.SensorType = sensorData.hospitalizationData()[patientIndex].SensorType;
+                kafkaModel.ParameterUnitMeasured = sensorData.hospitalizationData()[patientIndex].ParameterUnitMeasured;
+                kafkaModel.PatientDiagnosis = sensorData.hospitalizationData()[patientIndex].PatientDiagnosis;
+                var minValue = sensorData.hospitalizationData()[patientIndex].ParameterMinValue;
+                var maxValue = sensorData.hospitalizationData()[patientIndex].ParameterMaxValue;
+                var normalMax = sensorData.hospitalizationData()[patientIndex].ParameterNormalMaxValue;
+                var normalMin = sensorData.hospitalizationData()[patientIndex].ParameterNormalMinValue; if (guessing == 274 || guessing == 554 || guessing == 799)
+                {
+                    if (sensorData.hospitalizationData()[patientIndex].ParameterName == "blood pressure")
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
+                        kafkaModel.SensorValues[1] = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
+                    }
+                    else
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(minValue, maxValue), 4);
+                        kafkaModel.SensorValues[1] = 0;
+                    }
+
+                }
+                else
+                {
+                    if (sensorData.hospitalizationData()[patientIndex].ParameterName == "blood pressure")
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(normalMin, normalMin + 10.00), 4);
+                        kafkaModel.SensorValues[1] = Math.Round(random.GenerateValue(normalMax - 5.00, maxValue), 4);
+                    }
+                    else
+                    {
+                        kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(normalMin, normalMax), 4);
+                        kafkaModel.SensorValues[1] = 0;
+                    }
+
+                }
+                patientList.Add(kafkaModel);
+            }
+
+
+            var jsonData = JsonConvert.SerializeObject(patientList, Formatting.Indented);
 
             using (var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = "localhost:9092" }).Build())
             {
@@ -161,9 +198,31 @@ namespace SensorGenerator
                     meta.Topics[2].Partitions.ForEach(partition =>
                     {
                         lblPartition.Text = partition.PartitionId.ToString();
-                        lblReplicas.Text = partition.Replicas[0].ToString();
+                        lblReplicas.Text = partition.Replicas.ToString();
                     });
                     lblCountPatients.Text = "Data are sending to Kafka...";
+                    var conf = new ProducerConfig { BootstrapServers = "localhost:9092" };
+                    Action<DeliveryReport<Null, string>> handler = r =>
+                    {
+                        if(r.Error.IsError)
+                        {
+                            lblCountPatients.Text = "An error occurred. Message: " + r.Error.Reason;
+                        } else { patientList.Clear(); }
+                        Console.WriteLine(!r.Error.IsError
+                        ? "Delivered message to" + r.TopicPartitionOffset
+                        : "Delivery Error: " + r.Error.Reason);
+                    };
+   
+                   
+                    using (var p = new ProducerBuilder<Null, string>(conf).Build())
+                    {
+
+                        p.Produce("sensor-generator", new Message<Null, string> { Value = jsonData }, handler);
+
+                        // wait for up to 10 seconds for any inflight messages to be delivered.
+                        p.Flush(TimeSpan.FromSeconds(10));
+                    }
+                    
                 }
                 catch (KafkaException ex)
                 {
@@ -173,23 +232,6 @@ namespace SensorGenerator
                     
                 }
             }
-
-            // var conf = new ProducerConfig { BootstrapServers = "localhost:9092" };
-            // Action<DeliveryReport<Null, string>> handler = r =>
-            //Console.WriteLine(!r.Error.IsError
-            // ? "Delivered message to" + r.TopicPartitionOffset
-            // : "Delivery Error: " + r.Error.Reason);
-            // using (var p = new ProducerBuilder<Null, string>(conf).Build())
-            // {
-
-            //     p.Produce("sensor-generator", new Message<Null, string> { Value = "hello" }, handler);
-
-            //     // wait for up to 10 seconds for any inflight messages to be delivered.
-            //     p.Flush(TimeSpan.FromSeconds(10));
-            // }
-
-
-
         }
 
         private void chkSelectUnselect_CheckedChanged(object sender, EventArgs e)
@@ -233,25 +275,56 @@ namespace SensorGenerator
             foreach (TreeNode childNode in e.Node.Nodes)
             {
               childNode.Checked = e.Node.Checked;
+                  
             }
 
             int countSelectedNodes = 0;
+           
             foreach (TreeNode countNodes in treeView1.Nodes[0].Nodes[0].Nodes)
             {
+               
                 if (countNodes.Checked)
                 {
+                    if (!patientIndexSelectedRemote.Contains(countNodes.Index))
+                    {
+                        patientIndexSelectedRemote.Add(countNodes.Index);
+                    }
                     countSelectedNodes++;
+                    //foreach (var sensor in sensorData.remoteControlData())
+                    //{
+                    //        KafkaModel kafkaModel = new KafkaModel();
+                    //        kafkaModel.SensorId = sensor.SensorId;
+                    //        kafkaModel.PatientId = sensor.PatientId;
+                    //        kafkaModel.DoctorId = sensor.DoctorId;
+                    //        kafkaModel.SensorType = sensor.SensorType;
+                    //        kafkaModel.ParameterUnitMeasured = sensor.ParameterUnitMeasured;
+                    //        kafkaModel.PatientDiagnosis = sensor.PatientDiagnosis;
+                    //        if (!patientList.Contains(kafkaModel))
+                    //        {
+                    //            patientList.Add(kafkaModel);
+                    //        }
+                    //}
                 }
             }
+
+            //for (int i = 0; i < patientList.Count; i++)
+            //{
+            //    MessageBox.Show(patientList[i].PatientId.ToString());
+            //}
             foreach (TreeNode countNodes in treeView1.Nodes[0].Nodes[1].Nodes)
             {
                 if (countNodes.Checked)
                 {
+                    if (!patientIndexSelectedHospitalization.Contains(countNodes.Index))
+                    {
+                        patientIndexSelectedHospitalization.Add(countNodes.Index);
+                    }
                     countSelectedNodes++;
                 }
             }
             lblCountPatients.Text = countSelectedNodes > 1 ? countSelectedNodes.ToString() + " patients ready for sending to Kafka..." :
                 countSelectedNodes.ToString() + " patient ready for sending to Kafka...";
+            countedPatients = countSelectedNodes;
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
