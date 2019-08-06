@@ -290,27 +290,8 @@ namespace SensorGenerator
                         patientIndexSelectedRemote.Add(countNodes.Index);
                     }
                     countSelectedNodes++;
-                    //foreach (var sensor in sensorData.remoteControlData())
-                    //{
-                    //        KafkaModel kafkaModel = new KafkaModel();
-                    //        kafkaModel.SensorId = sensor.SensorId;
-                    //        kafkaModel.PatientId = sensor.PatientId;
-                    //        kafkaModel.DoctorId = sensor.DoctorId;
-                    //        kafkaModel.SensorType = sensor.SensorType;
-                    //        kafkaModel.ParameterUnitMeasured = sensor.ParameterUnitMeasured;
-                    //        kafkaModel.PatientDiagnosis = sensor.PatientDiagnosis;
-                    //        if (!patientList.Contains(kafkaModel))
-                    //        {
-                    //            patientList.Add(kafkaModel);
-                    //        }
-                    //}
                 }
             }
-
-            //for (int i = 0; i < patientList.Count; i++)
-            //{
-            //    MessageBox.Show(patientList[i].PatientId.ToString());
-            //}
             foreach (TreeNode countNodes in treeView1.Nodes[0].Nodes[1].Nodes)
             {
                 if (countNodes.Checked)
