@@ -8,12 +8,12 @@ namespace SensorGenerator.DAL
 {
     public class KafkaModel
     {
-        public int PatientId { get; set; }
-        public int DoctorId { get; set; }
+        public int PatientId { get; set; }// remove
+        public int DoctorId { get; set; } //remove
         public int SensorId { get; set; }
-        public string ParameterUnitMeasured { get; set; }
-        public string SensorType { get; set; }
-        public string PatientDiagnosis { get; set; }
+        public string ParameterUnitMeasured { get; set; } // remove
+        public string SensorType { get; set; } // remove
+        public string PatientDiagnosis { get; set; } // remove
         public double[] SensorValues = new double[2]; 
     }
 }
