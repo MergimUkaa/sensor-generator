@@ -93,11 +93,6 @@ namespace SensorGenerator
             {
                 KafkaModel kafkaModel = new KafkaModel();
                 kafkaModel.SensorId = sensorData.remoteControlData()[patientIndex].SensorId;
-                kafkaModel.PatientId = sensorData.remoteControlData()[patientIndex].PatientId;
-                kafkaModel.DoctorId = sensorData.remoteControlData()[patientIndex].DoctorId;
-                kafkaModel.SensorType = sensorData.remoteControlData()[patientIndex].SensorType;
-                kafkaModel.ParameterUnitMeasured = sensorData.remoteControlData()[patientIndex].ParameterUnitMeasured;
-                kafkaModel.PatientDiagnosis = sensorData.remoteControlData()[patientIndex].PatientDiagnosis;
                 var minValue = sensorData.remoteControlData()[patientIndex].ParameterMinValue;
                 var maxValue = sensorData.remoteControlData()[patientIndex].ParameterMaxValue;
                 var normalMax = sensorData.remoteControlData()[patientIndex].ParameterNormalMaxValue;
@@ -137,15 +132,11 @@ namespace SensorGenerator
             {
                 KafkaModel kafkaModel = new KafkaModel();
                 kafkaModel.SensorId = sensorData.hospitalizationData()[patientIndex].SensorId;
-                kafkaModel.PatientId = sensorData.hospitalizationData()[patientIndex].PatientId;
-                kafkaModel.DoctorId = sensorData.hospitalizationData()[patientIndex].DoctorId;
-                kafkaModel.SensorType = sensorData.hospitalizationData()[patientIndex].SensorType;
-                kafkaModel.ParameterUnitMeasured = sensorData.hospitalizationData()[patientIndex].ParameterUnitMeasured;
-                kafkaModel.PatientDiagnosis = sensorData.hospitalizationData()[patientIndex].PatientDiagnosis;
                 var minValue = sensorData.hospitalizationData()[patientIndex].ParameterMinValue;
                 var maxValue = sensorData.hospitalizationData()[patientIndex].ParameterMaxValue;
                 var normalMax = sensorData.hospitalizationData()[patientIndex].ParameterNormalMaxValue;
-                var normalMin = sensorData.hospitalizationData()[patientIndex].ParameterNormalMinValue; if (guessing == 274 || guessing == 554 || guessing == 799)
+                var normalMin = sensorData.hospitalizationData()[patientIndex].ParameterNormalMinValue;
+                if (guessing == 274 || guessing == 554 || guessing == 799)
                 {
                     if (sensorData.hospitalizationData()[patientIndex].ParameterName == "blood pressure")
                     {
@@ -222,7 +213,9 @@ namespace SensorGenerator
                         // wait for up to 10 seconds for any inflight messages to be delivered.
                         p.Flush(TimeSpan.FromSeconds(10));
                     }
-                    
+
+                    patientList.Clear();
+
                 }
                 catch (KafkaException ex)
                 {
