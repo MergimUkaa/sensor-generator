@@ -37,7 +37,7 @@ namespace SensorGenerator
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
+
            if (!radioMinute.Checked && !radioSecond.Checked)
             {
                 MessageBox.Show("You must select the unit of time to generate data", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -93,6 +93,7 @@ namespace SensorGenerator
             {
                 KafkaModel kafkaModel = new KafkaModel();
                 kafkaModel.SensorId = sensorData.remoteControlData()[patientIndex].SensorId;
+                kafkaModel.ParameterUnitMeasured = sensorData.remoteControlData()[patientIndex].ParameterUnitMeasured;
                 var minValue = sensorData.remoteControlData()[patientIndex].ParameterMinValue;
                 var maxValue = sensorData.remoteControlData()[patientIndex].ParameterMaxValue;
                 var normalMax = sensorData.remoteControlData()[patientIndex].ParameterNormalMaxValue;
@@ -189,7 +190,7 @@ namespace SensorGenerator
                     meta.Topics[2].Partitions.ForEach(partition =>
                     {
                         lblPartition.Text = partition.PartitionId.ToString();
-                        lblReplicas.Text = partition.Replicas.ToString();
+                        lblReplicas.Text = partition.Replicas[0].ToString();
                     });
                     lblCountPatients.Text = "Data are sending to Kafka...";
                     var conf = new ProducerConfig { BootstrapServers = "localhost:9092" };
