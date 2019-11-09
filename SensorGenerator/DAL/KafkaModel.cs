@@ -9,6 +9,7 @@ namespace SensorGenerator.DAL
     public class KafkaModel
     {
         public int SensorId { get; set; }
-        public double[] SensorValues = new double[2]; 
+        public double[] SensorValues = new double[2];
+        public double[] GeoLocations = new double[2];
     }
 }

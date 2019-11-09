@@ -11,8 +11,8 @@ namespace SensorGenerator.DAL
         public int PatientId { get; set; }
         public string PatientName { get; set; }
         public string PatientSurname { get; set; }
-        public string PatientLat { get; set; }
-        public string PatientLng { get; set; }
+        public double PatientLat { get; set; }
+        public double PatientLng { get; set; }
         public int VisitId { get; set; }
         public string PatientDiagnosis { get; set; }
         public string DateOfVisit { get; set; }

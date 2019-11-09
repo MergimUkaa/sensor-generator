@@ -33,8 +33,8 @@ namespace SensorGenerator.DAL
                             sensorModel.PatientId = mdr.GetInt32(0);
                             sensorModel.PatientName = mdr.GetString(1);
                             sensorModel.PatientSurname = mdr.GetString(2);
-                            sensorModel.PatientLat = mdr.GetString(3);
-                            sensorModel.PatientLng = mdr.GetString(4);
+                            sensorModel.PatientLat = mdr.GetDouble(3);
+                            sensorModel.PatientLng = mdr.GetDouble(4);
                             sensorModel.VisitId = mdr.GetInt32(5);
                             sensorModel.PatientDiagnosis = mdr.GetString(6);
                             sensorModel.DateOfVisit = mdr.GetString(7);
@@ -90,8 +90,8 @@ namespace SensorGenerator.DAL
                             sensorModel.PatientId = mdr.GetInt32(0);
                             sensorModel.PatientName = mdr.GetString(1);
                             sensorModel.PatientSurname = mdr.GetString(2);
-                            sensorModel.PatientLat = mdr.GetString(3);
-                            sensorModel.PatientLng = mdr.GetString(4);
+                            sensorModel.PatientLat = mdr.GetDouble(3);
+                            sensorModel.PatientLng = mdr.GetDouble(4);
                             sensorModel.VisitId = mdr.GetInt32(5);
                             sensorModel.PatientDiagnosis = mdr.GetString(6);
                             sensorModel.DateOfVisit = mdr.GetString(7);

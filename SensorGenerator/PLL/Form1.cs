@@ -88,18 +88,24 @@ namespace SensorGenerator
 
             Random number = new Random();
             int guessing = number.Next(0, 1000);
+            int guessing1 = number.Next(0, 1000);
+            int guessing2 = number.Next(0, 1000);
+            int guessing3 = number.Next(0, 1000);
             RandomDoubleGenerator random = new RandomDoubleGenerator();           
             foreach (var patientIndex in patientIndexSelectedRemote)
             {
                 KafkaModel kafkaModel = new KafkaModel();
                 kafkaModel.SensorId = sensorData.remoteControlData()[patientIndex].SensorId;
-                kafkaModel.ParameterUnitMeasured = sensorData.remoteControlData()[patientIndex].ParameterUnitMeasured;
+                kafkaModel.GeoLocations[0] = sensorData.remoteControlData()[patientIndex].PatientLat;
+                kafkaModel.GeoLocations[1] = sensorData.remoteControlData()[patientIndex].PatientLng;
                 var minValue = sensorData.remoteControlData()[patientIndex].ParameterMinValue;
                 var maxValue = sensorData.remoteControlData()[patientIndex].ParameterMaxValue;
                 var normalMax = sensorData.remoteControlData()[patientIndex].ParameterNormalMaxValue;
                 var normalMin = sensorData.remoteControlData()[patientIndex].ParameterNormalMinValue;
-                if (guessing == 274 || guessing == 554 || guessing == 799)
+                if (guessing == guessing1 || guessing == guessing2 || guessing == guessing3)
                 {
+                    kafkaModel.GeoLocations[0] = sensorData.remoteControlData()[patientIndex].PatientLat + 0.1233;
+                    kafkaModel.GeoLocations[1] = sensorData.remoteControlData()[patientIndex].PatientLng + 0.116;
                     if (sensorData.remoteControlData()[patientIndex].ParameterName == "blood pressure")
                     {
                         kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
@@ -133,12 +139,16 @@ namespace SensorGenerator
             {
                 KafkaModel kafkaModel = new KafkaModel();
                 kafkaModel.SensorId = sensorData.hospitalizationData()[patientIndex].SensorId;
+                kafkaModel.GeoLocations[0] = sensorData.hospitalizationData()[patientIndex].PatientLat;
+                kafkaModel.GeoLocations[1] = sensorData.hospitalizationData()[patientIndex].PatientLng;
                 var minValue = sensorData.hospitalizationData()[patientIndex].ParameterMinValue;
                 var maxValue = sensorData.hospitalizationData()[patientIndex].ParameterMaxValue;
                 var normalMax = sensorData.hospitalizationData()[patientIndex].ParameterNormalMaxValue;
                 var normalMin = sensorData.hospitalizationData()[patientIndex].ParameterNormalMinValue;
-                if (guessing == 274 || guessing == 554 || guessing == 799)
+                if (guessing == guessing1 || guessing == guessing2 || guessing == guessing3)
                 {
+                    kafkaModel.GeoLocations[0] = sensorData.hospitalizationData()[patientIndex].PatientLat + 0.1233;
+                    kafkaModel.GeoLocations[1] = sensorData.hospitalizationData()[patientIndex].PatientLng + 0.116;
                     if (sensorData.hospitalizationData()[patientIndex].ParameterName == "blood pressure")
                     {
                         kafkaModel.SensorValues[0] = Math.Round(random.GenerateValue(minValue, normalMax - 15.00), 4);
